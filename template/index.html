@@ -1,0 +1,272 @@
+
+ 
+
+<!DOCTYPE html>
+<head>
+<style>
+        body {
+            background-image: url('/static/cool.png');
+            background-repeat: no-repeat;
+            background-size: cover;
+            overflow-y: hidden; /* Hide vertical scrollbar */
+            overflow-x: hidden; /* Hide horizontal scrollbar */
+        }
+</style>
+
+
+<style>
+
+ 
+
+    nav {
+        background: linear-gradient(-40deg, #e86942, #19020b, #e9c005);
+        background-size: 400% 400%;
+        animation: gradient 20s ease infinite;
+
+    }
+
+    .scroll-bar{
+        height: 80%;
+        width: 130px
+    }
+ 
+
+    h2 {
+        margin-top: 5px;
+    }
+
+ 
+
+    @keyframes gradient {
+        0% {
+            background-position: 0% 50%;
+        }
+
+ 
+
+        50% {
+            background-position: 100% 50%;
+        }
+
+ 
+
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+ 
+
+    body {
+        background-image: url('https://wallpaperaccess.com/full/333806.jpg');
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: 100% 100%;
+        overflow-y: hidden; /* Hide vertical scrollbar */
+        overflow-x: hidden; /* Hide horizontal scrollbar */ 
+    }
+    .dropbtn {
+        background-color: rgba(0,0,0,0);
+        color: white;
+        padding: 16px;
+        font-size: 16px;
+        border: none;
+    }
+
+ 
+
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+ 
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #212529;
+        opacity: 1;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+    }
+
+ 
+
+    .dropdown-content a {
+            color: white;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+    }
+
+ 
+
+    .dropdown-content a:hover {
+            background-color: #f37908;
+    }
+
+ 
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+ 
+
+    .dropdown:hover .dropbtn {
+        background-color: none;
+    }
+    .footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        line-height: 45px;
+        color: none
+    }
+</style>
+
+ 
+
+    <div class="container-fluid">
+<p></p>
+<h1 style="text-align:center; font-family: 'Times New Roman', Times, serif, serif; ">Rates Table</h1>
+<p style="text-align:center; font-family: 'Times New Roman';font-size:25px">This website gives a daily rate comparsion of Bitcoin in USD and CAD such as opening day rate and closing rate.</p>
+<p style="text-align:center; font-family: 'Times New Roman';font-size:25px">The following table below shows the last 5 days rate of Bitcoin in CAD.</p>
+
+</div>
+
+ 
+
+    <style>
+        .style-t {
+            border-collapse: collapse;
+            margin: 20px 34%;
+            font-size: 0.9em;
+            font-family: sans-serif;
+            min-width: 430px;
+            box-shadow: 0 0 15px rgb(8,80,122);
+        }
+
+ 
+
+            .style-t thead tr {
+                background-color: #408AB5;
+                color: #ffffff;
+                text-align: left;
+            }
+
+            body {
+             overflow: auto;
+            }
+
+            .style-t th,
+            .style-t td {
+                padding: 12px 50px;
+            }
+
+ 
+
+            .style-t tbody tr {
+                border-bottom: 0.9px solid #dddddd;
+                background-color:white;
+            }
+
+ 
+
+                .style-t tbody tr:last-of-type {
+                    border-bottom: 2px solid #408AB5;
+                }
+        
+        
+</style>
+</head>
+<body>
+  
+ 
+<br>
+<br>
+
+<table class="style-t">
+<thead>
+<tr>
+<th>Date</th>
+<th>Opening Rate</th>
+<th>Closing Rate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2023-08-10</td>
+<td>39696.9598407</td>
+<td>39694.1820456</td>
+</tr>
+
+<tr>
+    <td>2023-08-09</td>
+    <td>39949.8062913</td>
+    <td>39696.9598407</td>
+    </tr>
+
+<tr>
+        <td>2023-08-08</td>
+        <td>39199.1977458</td>
+        <td>39949.8197106</td>
+</tr>
+<tr>
+            <td>2023-08-07</td>
+            <td>39034.6368699</td>
+            <td>39199.1977458</td>
+</tr>
+
+<tr>
+    <td>2023-08-06</td>
+    <td>39012.7634109</td>
+    <td>39034.6234506</td>
+    </tr>
+
+
+</tbody>
+</table>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const table = document.getElementById("data-table");
+    const rows = table.getElementsByTagName("tr");
+  
+    const labels = [];
+    const data = [];
+  
+    // Loop through table rows to extract data
+    for (let i = 1; i < rows.length; i++) {
+      const row = rows[i].getElementsByTagName("td");
+      labels.push(row[0].textContent);
+      data.push(parseInt(row[1].textContent));
+    }
+  
+    // Create a bar chart
+    const ctx = document.getElementById("bar-chart").getContext("2d");
+    new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: labels,
+        datasets: [{
+          label: "Value",
+          data: data,
+          backgroundColor: "rgba(75, 192, 192, 0.6)"
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  </script>
+
+</body>
+
+ 

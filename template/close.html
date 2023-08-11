@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitcoin Rate and Bar Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Your CSS styles here */
+        body {
+            margin: 0;
+            padding: 0;
+            background: rgb(255, 255, 255);
+        }
+
+        /* ... your other styles ... */
+    </style>
+   
+</head>
+<body>
+    <div class="container-fluid">
+        <!-- Your content here -->
+        <p></p>
+        <h1 style="text-align:center; font-family: 'Times New Roman', Times, serif, serif;">Closing Rates of Bitcoin in CAD</h1>
+        <p style="text-align:center; font-family: 'Times New Roman';font-size:25px">This website gives a daily rate comparsion of Bitcoin in CAD such as opening day rate and closing rate.</p>
+        <p style="text-align:center; font-family: 'Times New Roman';font-size:25px">The following table below shows the last 3 years rate of Bitcoin in CAD.</p>
+    </div>
+
+    <table class="style-t" id="data-table">
+        <!-- Table content will be populated using JavaScript -->
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Opening Rate</th>
+                <th>Closing Rate</th>
+            </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+    </table>
+
+    <canvas id="bar-chart"></canvas>
+
+    <script>
+        const apiUrl = "https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol=BTC&market=CAD&apikey=451KU60FV4BXH04K";
+        const tableBody = document.getElementById("table-body");
+
+        // Fetch data from the API
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                const timeSeries = data["Time Series (Digital Currency Daily)"];
+
+                // Populate the table with fetched data
+                for (const date in timeSeries) {
+                    const entry = timeSeries[date];
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${date}</td>
+                        <td>${entry["1a. open (CAD)"]}</td>
+                        <td>${entry["4a. close (CAD)"]}</td>
+                    `;
+                    tableBody.appendChild(row);
+                }
+
+                // Create a bar chart
+                const labels = Object.keys(timeSeries).reverse();
+                const closingRates = labels.map(date => parseFloat(timeSeries[date]["4a. close (CAD)"]));
+                const ctx = document.getElementById("bar-chart").getContext("2d");
+                new Chart(ctx, {
+                    type: "bar",
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: "closing Rate",
+                            data: closingRates,
+                            backgroundColor: "rgba(75, 192, 192, 0.6)"
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => {
+                console.error("Error fetching data:", error);
+            });
+    </script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitcoin Rate and Bar Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Your CSS styles here */
+        body {
+            margin: 0;
+            padding: 0;
+            background: rgb(255, 255, 255);
+        }
+
+        /* ... your other styles ... */
+    </style>
+    
+    
+</head>
+<body>
+    <div class="container-fluid">
+        <!-- Your content here -->
+        <p></p>
+        <h1 style="text-align:center; font-family: 'Times New Roman', Times, serif, serif;">Bar Chart - Last 1 week Rates</h1>
+        <p style="text-align:center; font-family: 'Times New Roman';font-size:25px">This website gives a daily rate comparsion of Bitcoin in CAD such as opening day rate and closing rate.</p>
+        <p style="text-align:center; font-family: 'Times New Roman';font-size:25px">The following table below shows the last 7 days rate of Bitcoin in CAD.</p>
+    </div>
+
+    <table class="style-t" id="data-table">
+        <!-- Table content will be populated using JavaScript -->
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Opening Rate</th>
+                <th>Closing Rate</th>
+            </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+    </table>
+
+    <canvas id="bar-chart"></canvas>
+
+    <script>
+        const apiUrl = "https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol=BTC&market=CAD&apikey=451KU60FV4BXH04K";
+
+        // Fetch data from the API
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                const timeSeries = data["Time Series (Digital Currency Daily)"];
+
+                // Calculate the date 1 week ago
+                const oneWeekAgo = new Date();
+                oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+                // Filter data for the last 7 days
+                const filteredData = Object.entries(timeSeries)
+                    .filter(([date]) => new Date(date) >= oneWeekAgo)
+                    .map(([date, entry]) => ({
+                        date: date,
+                        open: parseFloat(entry["1a. open (CAD)"]),
+                        close: parseFloat(entry["4a. close (CAD)"])
+                    }));
+
+                const labels = filteredData.map(entry => entry.date);
+                const openData = filteredData.map(entry => entry.open);
+                const closeData = filteredData.map(entry => entry.close);
+
+                // Create a bar chart for the last 7 days' open and close prices
+                const ctx = document.getElementById("bar-chart").getContext("2d");
+                new Chart(ctx, {
+                    type: "bar",
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: "Open Price",
+                                data: openData,
+                                backgroundColor: "rgba(75, 192, 192, 0.6)"
+                            },
+                            {
+                                label: "Close Price",
+                                data: closeData,
+                                backgroundColor: "rgba(192, 75, 75, 0.6)"
+                            }
+                        ]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => {
+                console.error("Error fetching data:", error);
+            });
+    </script>
+</body>
+</html>
